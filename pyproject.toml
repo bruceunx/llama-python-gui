@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "llama-python-gui"
+version = "0.1.0"
+description = "llama python gui"
+authors = ["bruce <bruceunx@outlook.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+llama-cpp-python = "^0.2.44"
+pyside6 = "^6.6.2"
+sqlalchemy = "^2.0.27"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.2.2"
+mypy = "^1.8.0"
+flake8 = "^7.0.0"
+yapf = "^0.40.2"
+
+
+[tool.poetry.group.test.dependencies]
+pytest-qt = "^4.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
