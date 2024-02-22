@@ -1,8 +1,10 @@
 from PySide6.QtCore import QMetaObject, Slot
-from PySide6.QtGui import Qt
+from PySide6.QtGui import QPixmap, Qt
 from PySide6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QPushButton, QScrollArea, QWidget, QVBoxLayout, QLabel
 
 from llama_python_gui.views.components import ArchiveChats
+
+from llama_python_gui.assets import resource  # noqa
 
 MainStyle = """
 *{
@@ -77,12 +79,21 @@ class MainView(QWidget):
             QLabel("Llama-chat"), 0,
             Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
 
+        top_model = QFrame()
+        top_frame.layout().addWidget(top_model, 0,
+                                     Qt.AlignmentFlag.AlignCenter)
+        top_model.setLayout(QHBoxLayout())
         model_switch = QComboBox()
         model_switch.setFixedWidth(200)
         model_switch.setObjectName("model_switch")
         model_switch.addItems(["通用模型4-6G", "小模型<1G"])
-        top_frame.layout().addWidget(model_switch, 0,
-                                     Qt.AlignmentFlag.AlignCenter)
+
+        model_label = QLabel()
+        model_label.setObjectName("model_label")
+        model_label.setPixmap(QPixmap(":/icons/server.svg"))
+
+        top_model.layout().addWidget(model_label)
+        top_model.layout().addWidget(model_switch)
 
         top_frame.layout().addWidget(QLabel(""))
         top_frame.layout().setContentsMargins(10, 0, 10, 0)
@@ -115,6 +126,9 @@ class MainView(QWidget):
 
         new_chat = QPushButton("+ 新建聊天")
         new_chat.setObjectName("new_chat")
+
+        new_chat.setIcon(QPixmap(":/icons/layers.svg"))
+
         new_chat_frame.layout().addWidget(new_chat, 0,
                                           Qt.AlignmentFlag.AlignRight)
 

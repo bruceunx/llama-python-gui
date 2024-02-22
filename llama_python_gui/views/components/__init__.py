@@ -1,5 +1,5 @@
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget, QHBoxLayout
 
 
 class ArchiveChats(QWidget):
@@ -24,6 +24,8 @@ class ClickLable(QLabel):
 
     def __init__(self, text: str) -> None:
         super().__init__(text)
+        self.setLayout(QHBoxLayout())
+        self.layout().addWidget(QLabel("hello"))
 
     def mousePressEvent(self, event):
         self.clicked.emit()

@@ -1,0 +1,211 @@
+# Resource object code (Python 3)
+# Created by: object code
+# Created by: The Resource Compiler for Qt version 6.6.2
+# WARNING! All changes made in this file will be lost!
+
+from PySide6 import QtCore
+
+qt_resource_data = b"\
+\x00\x00\x013\
+<\
+svg xmlns=\x22http:\
+//www.w3.org/200\
+0/svg\x22 width=\x2236\
+\x22 height=\x2236\x22 vi\
+ewBox=\x220 0 24 24\
+\x22 fill=\x22none\x22 st\
+roke=\x22white\x22 str\
+oke-width=\x222\x22 st\
+roke-linecap=\x22ro\
+und\x22 stroke-line\
+join=\x22round\x22 cla\
+ss=\x22feather feat\
+her-send\x22><line \
+x1=\x2222\x22 y1=\x222\x22 x\
+2=\x2211\x22 y2=\x2213\x22><\
+/line><polygon p\
+oints=\x2222 2 15 2\
+2 11 13 2 9 22 2\
+\x22></polygon></sv\
+g>\
+\x00\x00\x01f\
+<\
+svg xmlns=\x22http:\
+//www.w3.org/200\
+0/svg\x22 width=\x2236\
+\x22 height=\x2236\x22 vi\
+ewBox=\x220 0 24 24\
+\x22 fill=\x22none\x22 st\
+roke=\x22white\x22 str\
+oke-width=\x222\x22 st\
+roke-linecap=\x22ro\
+und\x22 stroke-line\
+join=\x22round\x22 cla\
+ss=\x22feather feat\
+her-layers\x22><pol\
+ygon points=\x2212 \
+2 2 7 12 12 22 7\
+ 12 2\x22></polygon\
+><polyline point\
+s=\x222 17 12 22 22\
+ 17\x22></polyline>\
+<polyline points\
+=\x222 12 12 17 22 \
+12\x22></polyline><\
+/svg>\
+\x00\x00\x01\xa8\
+<\
+svg xmlns=\x22http:\
+//www.w3.org/200\
+0/svg\x22 width=\x2236\
+\x22 height=\x2236\x22 vi\
+ewBox=\x220 0 24 24\
+\x22 fill=\x22none\x22 st\
+roke=\x22white\x22 str\
+oke-width=\x222\x22 st\
+roke-linecap=\x22ro\
+und\x22 stroke-line\
+join=\x22round\x22 cla\
+ss=\x22feather feat\
+her-server\x22><rec\
+t x=\x222\x22 y=\x222\x22 wi\
+dth=\x2220\x22 height=\
+\x228\x22 rx=\x222\x22 ry=\x222\
+\x22></rect><rect x\
+=\x222\x22 y=\x2214\x22 widt\
+h=\x2220\x22 height=\x228\
+\x22 rx=\x222\x22 ry=\x222\x22>\
+</rect><line x1=\
+\x226\x22 y1=\x226\x22 x2=\x226\
+.01\x22 y2=\x226\x22></li\
+ne><line x1=\x226\x22 \
+y1=\x2218\x22 x2=\x226.01\
+\x22 y2=\x2218\x22></line\
+></svg>\
+\x00\x00\x01\xc0\
+<\
+svg xmlns=\x22http:\
+//www.w3.org/200\
+0/svg\x22 width=\x2236\
+\x22 height=\x2236\x22 vi\
+ewBox=\x220 0 24 24\
+\x22 fill=\x22none\x22 st\
+roke=\x22currentCol\
+or\x22 stroke-width\
+=\x222\x22 stroke-line\
+cap=\x22round\x22 stro\
+ke-linejoin=\x22rou\
+nd\x22 class=\x22feath\
+er feather-trash\
+-2\x22><polyline po\
+ints=\x223 6 5 6 21\
+ 6\x22></polyline><\
+path d=\x22M19 6v14\
+a2 2 0 0 1-2 2H7\
+a2 2 0 0 1-2-2V6\
+m3 0V4a2 2 0 0 1\
+ 2-2h4a2 2 0 0 1\
+ 2 2v2\x22></path><\
+line x1=\x2210\x22 y1=\
+\x2211\x22 x2=\x2210\x22 y2=\
+\x2217\x22></line><lin\
+e x1=\x2214\x22 y1=\x2211\
+\x22 x2=\x2214\x22 y2=\x2217\
+\x22></line></svg>\
+\x00\x00\x02\x94\
+<\
+svg xmlns=\x22http:\
+//www.w3.org/200\
+0/svg\x22 width=\x2236\
+\x22 height=\x2236\x22 vi\
+ewBox=\x220 0 24 24\
+\x22 fill=\x22none\x22 st\
+roke=\x22white\x22 str\
+oke-width=\x222\x22 st\
+roke-linecap=\x22ro\
+und\x22 stroke-line\
+join=\x22round\x22 cla\
+ss=\x22feather feat\
+her-cpu\x22><rect x\
+=\x224\x22 y=\x224\x22 width\
+=\x2216\x22 height=\x2216\
+\x22 rx=\x222\x22 ry=\x222\x22>\
+</rect><rect x=\x22\
+9\x22 y=\x229\x22 width=\x22\
+6\x22 height=\x226\x22></\
+rect><line x1=\x229\
+\x22 y1=\x221\x22 x2=\x229\x22 \
+y2=\x224\x22></line><l\
+ine x1=\x2215\x22 y1=\x22\
+1\x22 x2=\x2215\x22 y2=\x224\
+\x22></line><line x\
+1=\x229\x22 y1=\x2220\x22 x2\
+=\x229\x22 y2=\x2223\x22></l\
+ine><line x1=\x2215\
+\x22 y1=\x2220\x22 x2=\x2215\
+\x22 y2=\x2223\x22></line\
+><line x1=\x2220\x22 y\
+1=\x229\x22 x2=\x2223\x22 y2\
+=\x229\x22></line><lin\
+e x1=\x2220\x22 y1=\x2214\
+\x22 x2=\x2223\x22 y2=\x2214\
+\x22></line><line x\
+1=\x221\x22 y1=\x229\x22 x2=\
+\x224\x22 y2=\x229\x22></lin\
+e><line x1=\x221\x22 y\
+1=\x2214\x22 x2=\x224\x22 y2\
+=\x2214\x22></line></s\
+vg>\
+"
+
+qt_resource_name = b"\
+\x00\x05\
+\x00o\xa6S\
+\x00i\
+\x00c\x00o\x00n\x00s\
+\x00\x08\
+\x0cGU\xe7\
+\x00s\
+\x00e\x00n\x00d\x00.\x00s\x00v\x00g\
+\x00\x0a\
+\x0c\x9c\x0b'\
+\x00l\
+\x00a\x00y\x00e\x00r\x00s\x00.\x00s\x00v\x00g\
+\x00\x0a\
+\x0c\xcac\xe7\
+\x00s\
+\x00e\x00r\x00v\x00e\x00r\x00.\x00s\x00v\x00g\
+\x00\x0b\
+\x0b\xf2K\xe7\
+\x00t\
+\x00r\x00a\x00s\x00h\x00-\x002\x00.\x00s\x00v\x00g\
+\x00\x07\
+\x0axZ\x07\
+\x00c\
+\x00p\x00u\x00.\x00s\x00v\x00g\
+"
+
+qt_resource_struct = b"\
+\x00\x00\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00\x01\
+\x00\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x02\x00\x00\x00\x05\x00\x00\x00\x02\
+\x00\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00v\x00\x00\x00\x00\x00\x01\x00\x00\x06\x11\
+\x00\x00\x01\x8d\xcf\xfaBJ\
+\x00\x00\x00Z\x00\x00\x00\x00\x00\x01\x00\x00\x04M\
+\x00\x00\x01\x8d\xcf\xe2\xdb\xce\
+\x00\x00\x00\x10\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
+\x00\x00\x01\x8d\xcf\xfa\xdd\xdf\
+\x00\x00\x00&\x00\x00\x00\x00\x00\x01\x00\x00\x017\
+\x00\x00\x01\x8d\xcf\xfa\x91\xf9\
+\x00\x00\x00@\x00\x00\x00\x00\x00\x01\x00\x00\x02\xa1\
+\x00\x00\x01\x8d\xcf\xfa\xf8\x1b\
+"
+
+def qInitResources():
+    QtCore.qRegisterResourceData(0x03, qt_resource_struct, qt_resource_name, qt_resource_data)
+
+def qCleanupResources():
+    QtCore.qUnregisterResourceData(0x03, qt_resource_struct, qt_resource_name, qt_resource_data)
+
+qInitResources()

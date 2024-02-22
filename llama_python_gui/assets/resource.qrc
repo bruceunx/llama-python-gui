@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>cpu.svg</file>
+    <file>send.svg</file>
+    <file>server.svg</file>
+    <file>layers.svg</file>
+    <file>trash-2.svg</file>
+  </qresource>
+</RCC>
