@@ -5,5 +5,6 @@
     <file>server.svg</file>
     <file>layers.svg</file>
     <file>trash-2.svg</file>
+    <file>edit.svg</file>
   </qresource>
 </RCC>
