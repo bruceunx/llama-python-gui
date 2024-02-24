@@ -116,7 +116,7 @@ class SingleChat(QWidget):
         self.layout().addWidget(self.delete_btn)
 
     def addStyle(self):
-        self.setStyleSheet("QLabel, QPushButton{border: none;}")
+        self.setStyleSheet("")
 
     def addConnections(self):
         pass
@@ -128,4 +128,4 @@ class SingleChat(QWidget):
     def on_edit(self):
         change_title = ChangeTitle(self.content)
         if change_title.exec() == QDialog.Accepted:
-            print(change_title.title_input.text())
+            self.content_label.setText(change_title.title_input.text())
