@@ -2,4 +2,5 @@
 /**/.py[ocd]
 
 .mypy_cache/
+/**/.DS_Store
 
