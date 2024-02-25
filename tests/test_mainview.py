@@ -5,6 +5,7 @@ from llama_python_gui.views.mainview import MainView
 if __name__ == "__main__":
     import sys
     app = QApplication([])
+    app.setStyle("Fusion")
     window = MainView()
     window.show()
     sys.exit(app.exec())

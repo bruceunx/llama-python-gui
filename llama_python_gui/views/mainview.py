@@ -1,6 +1,6 @@
-from PySide6.QtCore import QMetaObject, Slot
+from PySide6.QtCore import QMetaObject, QSize, Slot
 from PySide6.QtGui import QPixmap, Qt
-from PySide6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QPushButton, QScrollArea, QWidget, QVBoxLayout, QLabel
+from PySide6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QPushButton, QScrollArea, QTextEdit, QWidget, QVBoxLayout, QLabel
 
 from llama_python_gui.views.components import ArchiveChats
 
@@ -38,6 +38,15 @@ MainStyle = """
 #right_frame{
     background-color: #2c2c2c;
     color:#fff;
+}
+#prompt_frame QTextEdit{
+    padding: 10px;
+    font-size: 16pt;
+    border: 1px solid #424242;
+    border-radius: 10px;
+}
+#prompt_frame QPushButton{
+    padding: 5px;
 }
 """
 
@@ -141,6 +150,28 @@ class MainView(QWidget):
         self.achive_chats = ArchiveChats()
 
         topic_group.setWidget(self.achive_chats)
+
+        # set right frame layout
+        right_frame.setLayout(QVBoxLayout())
+        self.chat_content = QScrollArea()
+        prompt_frame = QFrame()
+        prompt_frame.setLayout(QHBoxLayout())
+        self.prompt_input = QTextEdit()
+        prompt_frame.layout().addWidget(self.prompt_input)
+        self.chat_button = QPushButton()
+        self.chat_button.setIcon(QPixmap(":/icons/send.svg"))
+        self.chat_button.setIconSize(QSize(30, 30))
+        prompt_frame.layout().addWidget(self.chat_button)
+        right_frame.layout().addWidget(self.chat_content)
+        right_frame.layout().addWidget(prompt_frame, 0,
+                                       Qt.AlignmentFlag.AlignBottom)
+        right_frame.layout().setContentsMargins(0, 0, 0, 0)
+        right_frame.layout().setSpacing(1)
+
+        prompt_frame.layout().setContentsMargins(30, 10, 30, 10)
+        prompt_frame.layout().setSpacing(5)
+        prompt_frame.setObjectName("prompt_frame")
+        prompt_frame.setFixedHeight(100)
 
         QMetaObject.connectSlotsByName(self)
 

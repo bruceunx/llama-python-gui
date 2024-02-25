@@ -58,9 +58,6 @@ class ArchiveChats(QWidget):
             self.chats.append(q_label)
             self.layout().addWidget(q_label)
 
-    def addStyle(self):
-        self.setStyleSheet("#{border: 1px solid #fff; padding:2px;}")
-
     @Slot(str)
     def delete_chat(self, chat_uid: str):
         for chat in self.chats:
