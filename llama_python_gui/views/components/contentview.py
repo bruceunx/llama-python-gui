@@ -29,7 +29,8 @@ console.log(a)
 # background-color: #272822;
 Style = """
 QLabel {
-    font-size: 20pt;
+    font-size: 27pt;
+    font-weight: bold;
 }
 QTextEdit {
     font-size: 18pt;
@@ -59,10 +60,9 @@ class Introduction(QWidget):
         html = code_style
         html += markdown.markdown(
             INTRODUCTION, extensions=["fenced_code", "codehilite", "tables"])
-        print(html)
         introduction.setHtml(html)
         introduction.setReadOnly(True)
-        introduction.setFixedSize(400, 200)
+        introduction.setFixedSize(500, 200)
 
         self.setStyleSheet(Style)
 
