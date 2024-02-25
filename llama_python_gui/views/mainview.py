@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QPushButton, QScro
 
 from llama_python_gui.views.components import ArchiveChats
 
-from llama_python_gui.assets import resource  # noqa
+from llama_python_gui.views.components.contentview import Introduction  # noqa
 
 MainStyle = """
 *{
@@ -173,6 +173,11 @@ class MainView(QWidget):
         prompt_frame.setObjectName("prompt_frame")
         prompt_frame.setFixedHeight(100)
 
+        self.chat_content.setWidget(Introduction())
+        self.chat_content.setWidgetResizable(True)
+        self.chat_content.verticalScrollBar().rangeChanged.connect(
+            self.scroll_down)
+
         QMetaObject.connectSlotsByName(self)
 
     def addStyle(self):
@@ -187,3 +192,7 @@ class MainView(QWidget):
     @Slot()
     def on_new_chat_clicked(self):
         print("new chat")
+
+    @Slot(int, int)
+    def scroll_down(self, min: int, max: int):
+        self.chat_content.verticalScrollBar().setValue(max)
