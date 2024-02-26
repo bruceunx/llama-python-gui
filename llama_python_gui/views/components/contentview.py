@@ -1,3 +1,6 @@
+from typing import Deque
+from collections import deque
+
 from PySide6.QtGui import Qt
 from PySide6.QtWidgets import QFrame, QTextEdit, QWidget, QVBoxLayout, QLabel
 
@@ -67,3 +70,11 @@ class Introduction(QWidget):
         self.setStyleSheet(Style)
 
         content.layout().setSpacing(10)
+
+
+class ChatContainer(QWidget):
+
+    def __init__(self, data: Deque | None):
+        super().__init__()
+        self.setLayout(QVBoxLayout())
+        self.data = data or deque(maxlen=7)

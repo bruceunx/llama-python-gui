@@ -1,3 +1,7 @@
+from pathlib import Path
+
+base_path = Path(__file__).resolve().parent
+
 code_style: str = """
 <style>
 pre { line-height: 125%; }
@@ -87,3 +91,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .il { color: #ae81ff } /* Literal.Number.Integer.Long */
 </style>
 """
+
+MODEL_PATH = {
+    "normal": "../models/openhermes-2.5-mistral-7b.Q5_K_M.gguf",
+    "small": "../models/openhermes-2.5-mistral-7b.Q5_K_M.gguf"
+}
