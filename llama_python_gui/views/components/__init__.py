@@ -53,6 +53,8 @@ class ArchiveChats(QWidget):
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(5, 2, 5, 2)
         self.layout().setSpacing(1)
+        self.layout().setAlignment(Qt.AlignmentFlag.AlignTop
+                                   | Qt.AlignmentFlag.AlignHCenter)
 
         self.chats = []
 
@@ -68,6 +70,7 @@ class ArchiveChats(QWidget):
 
     @Slot(list)
     def load_chats(self, chats: List[Dict[str, str]]):
+        # self.setStyleSheet("background-color: #f5f5f5;")
         for chat in chats:
             q_label = SingleChat(chat["name"], chat["uuid"])
             q_label.del_chat.connect(self.delete_chat)
@@ -82,8 +85,9 @@ class ArchiveChats(QWidget):
     @Slot(str, str)
     def add_new_chat(self, prompt: str, chat_uid: str) -> None:
         q_label = SingleChat(prompt, chat_uid)
+        q_label.del_chat.connect(self.delete_chat)
+        q_label.chat_uid.connect(self.send_chat_uid)
         self.chats.append(q_label)
-        print(q_label)
         self.layout().insertWidget(0, q_label)  # type: ignore
         # self.layout().addWidget(q_label)  # type: ignore
 
@@ -97,7 +101,6 @@ class ClickLable(QLabel):
 
     def mousePressEvent(self, event):
         self.clicked.emit()
-        print("clicked")
 
 
 class SingleChat(QWidget):

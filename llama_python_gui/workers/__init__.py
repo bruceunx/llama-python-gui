@@ -15,6 +15,7 @@ class LlamaWorker(QObject):
 
     chats = Signal(list)
     stream_msg = Signal(str)
+    chat_msg = Signal(str)
 
     def __init__(self, model: str = "normal"):
         super().__init__()
@@ -60,6 +61,7 @@ class LlamaWorker(QObject):
             stream=True,
         )
         res = ""
+        self.chat_msg.emit("AI:")
         for reselt in output:
             content = reselt["choices"][0]["delta"]  # type: ignore
             if "content" in content:
@@ -94,7 +96,7 @@ class LlamaWorker(QObject):
     def reload_messages(self, chat_id: str) -> None:
         self.load_chat(chat_id)
         for message in self.messages[1:]:
-            self.stream_msg.emit(message["content"])
+            self.chat_msg.emit(message["content"])
 
     @Slot(str)
     def set_name(self, name: str):
@@ -124,7 +126,7 @@ class LlamaWorker(QObject):
             data = pickle.load(f)
             self.name = data["name"]
             self.messages = data["messages"]
-        return self.name, self.messages
+            self.chat_id = chat_id
 
     @Slot(str)
     def delete_chat(self, chat_id: str):

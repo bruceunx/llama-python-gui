@@ -63,6 +63,8 @@ class MainView(QWidget):
     start_singnal = Signal()
     init_signal = Signal()
 
+    prompt_msg = Signal(str)
+
     def __init__(self):
         super().__init__()
         self.resize(1200, 700)
@@ -188,6 +190,8 @@ class MainView(QWidget):
         prompt_frame.setObjectName("prompt_frame")
         prompt_frame.setFixedHeight(100)
 
+        topic_group.setWidgetResizable(True)
+
         self.chat_content.setWidget(Introduction())
         self.chat_content.setWidgetResizable(True)
         self.chat_content.verticalScrollBar().rangeChanged.connect(
@@ -212,6 +216,7 @@ class MainView(QWidget):
         self.chat_info.connect(self.worker.start_new_chat)
         self.start_singnal.connect(self.worker.handle_reset)
         self.init_signal.connect(self.worker.get_all_chats)
+        self.prompt_msg.connect(self.worker.handle_chat)
 
     def afterInit(self):
         self.thread_worker.start()
@@ -229,7 +234,8 @@ class MainView(QWidget):
     @Slot()
     def on_send_chat_clicked(self):
         if self.start_chat:
-            self.chat_content.setWidget(ChatContainer())
+            self.reset_chat_container()
+
         prompt = self.prompt_input.toPlainText().strip()
         if prompt == "":
             return
@@ -238,17 +244,15 @@ class MainView(QWidget):
             chat_uid = str(uuid.uuid4())
             self.current_chat_id = chat_uid
             self.chat_info.emit(prompt, chat_uid)
+            self.start_chat = False
 
-        self.start_chat = False
-        self.chat_content.widget().add_chat(prompt)
+        self.prompt_msg.emit(prompt)
         self.prompt_input.clear()
 
     @Slot(str)
     def reload_chat(self, chat_uid: str):
         self.current_chat_id = chat_uid
-        self.chat_uid.disconnect()
-        self.chat_content.setWidget(ChatContainer())
-        self.chat_uid.connect(self.chat_content.widget().reload_chat)
+        self.reset_chat_container()
         self.chat_uid.emit(chat_uid)
         self.start_chat = False
 
@@ -262,3 +266,11 @@ class MainView(QWidget):
         self.thread_worker.quit()
         self.thread_worker.wait()
         event.accept()
+
+    def reset_chat_container(self) -> None:
+        self.chat_content.setWidget(ChatContainer())
+        self.chat_uid.connect(self.worker.reload_messages)
+        self.worker.chat_msg.connect(self.chat_content.widget().add_chat)
+        self.worker.stream_msg.connect(
+            self.chat_content.widget().update_message)
+        self.prompt_msg.connect(self.chat_content.widget().add_chat)
