@@ -4,7 +4,7 @@ from PySide6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QPushButton, QScro
 
 from llama_python_gui.views.components import ArchiveChats
 
-from llama_python_gui.views.components.contentview import Introduction  # noqa
+from llama_python_gui.views.components.contentview import ChatContainer, Introduction  # noqa
 
 MainStyle = """
 *{
@@ -161,6 +161,7 @@ class MainView(QWidget):
         self.chat_button = QPushButton()
         self.chat_button.setIcon(QPixmap(":/icons/send.svg"))
         self.chat_button.setIconSize(QSize(30, 30))
+        self.chat_button.setObjectName("send_chat")
         prompt_frame.layout().addWidget(self.chat_button)
         right_frame.layout().addWidget(self.chat_content)
         right_frame.layout().addWidget(prompt_frame, 0,
@@ -191,8 +192,16 @@ class MainView(QWidget):
 
     @Slot()
     def on_new_chat_clicked(self):
-        print("new chat")
+        self.chat_content.setWidget(ChatContainer())
 
     @Slot(int, int)
     def scroll_down(self, min: int, max: int):
         self.chat_content.verticalScrollBar().setValue(max)
+
+    @Slot()
+    def on_send_chat_clicked(self):
+        prompt = self.prompt_input.toPlainText().strip()
+        if prompt == "":
+            return
+        self.chat_content.widget().add_chat(prompt)
+        self.prompt_input.clear()
