@@ -12,4 +12,18 @@
 
 > 方便使用就可以。
 
+#### 使用方法
+
+- 如果使用poetry
+
+    > git clone https://github.com/bruceunx/llama-python-gui && poetry install
+
+- 如果pip 
+
+    > pip install llama-cpp-python  pyside6 markdown  pygments 
+
+- 运行
+
+    > python llama_python_gui
+
 
