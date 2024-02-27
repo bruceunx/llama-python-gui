@@ -80,8 +80,7 @@ class ExpandingTextEdit(QTextEdit):
         self.vertical_scroll_bar.rangeChanged.connect(self.update_scrollbar)
 
     def update_scrollbar(self, min, max):
-        w, h = self.width(), self.height()
-        self.resize(w, h + max)
+        self.setFixedHeight(self.height() + max)
 
     def add_message(self, message: str) -> None:
         self.content += message
@@ -96,6 +95,20 @@ class ExpandingTextEdit(QTextEdit):
         html += markdown.markdown(
             self.content, extensions=["fenced_code", "codehilite", "tables"])
         self.setHtml(html)
+
+
+class PromptTextEdit(QTextEdit):
+
+    def __init__(self):
+        super().__init__()
+        self.max_height = 90
+        self.vertical_scroll_bar = self.verticalScrollBar()
+        self.vertical_scroll_bar.rangeChanged.connect(self.update_scrollbar)
+        self.setFixedHeight(50)
+
+    def update_scrollbar(self, min_, max):
+        height = min(self.max_height, self.height() + max)
+        self.setFixedHeight(height)
 
 
 class ChatContainer(QWidget):

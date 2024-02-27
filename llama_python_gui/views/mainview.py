@@ -2,11 +2,11 @@ import uuid
 
 from PySide6.QtCore import QMetaObject, QSize, QThread, Signal, Slot
 from PySide6.QtGui import QPixmap, Qt
-from PySide6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QPushButton, QScrollArea, QTextEdit, QWidget, QVBoxLayout, QLabel
+from PySide6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QPushButton, QScrollArea, QWidget, QVBoxLayout, QLabel
 
 from llama_python_gui.views.components import ArchiveChats
 
-from llama_python_gui.views.components.contentview import ChatContainer, Introduction
+from llama_python_gui.views.components.contentview import ChatContainer, Introduction, PromptTextEdit
 from llama_python_gui.workers import LlamaWorker  # noqa
 
 MainStyle = """
@@ -172,7 +172,7 @@ class MainView(QWidget):
         self.chat_content = QScrollArea()
         prompt_frame = QFrame()
         prompt_frame.setLayout(QHBoxLayout())
-        self.prompt_input = QTextEdit()
+        self.prompt_input = PromptTextEdit()
         prompt_frame.layout().addWidget(self.prompt_input)
         self.chat_button = QPushButton()
         self.chat_button.setIcon(QPixmap(":/icons/send.svg"))
