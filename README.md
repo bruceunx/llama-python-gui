@@ -27,3 +27,6 @@
     > python llama_python_gui
 
 
+#### TODO
+
+ - [ ] add RAG?
