@@ -197,6 +197,12 @@ class MainView(QWidget):
         self.chat_content.verticalScrollBar().rangeChanged.connect(
             self.scroll_down)
 
+        footer_frame.setLayout(QHBoxLayout())
+        footer_frame.layout().setContentsMargins(20, 0, 20, 0)
+        footer_frame.layout().setSpacing(1)
+        footer_frame.layout().addWidget(QLabel("© 2024 pylogic.net"), 0,
+                                        Qt.AlignmentFlag.AlignLeft)
+
         QMetaObject.connectSlotsByName(self)
 
     def addStyle(self):
