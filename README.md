@@ -1,4 +1,4 @@
-## LLama 离线chat版本
+## 🦙LLama 离线chat版本
 
 ![](./screenshot.png)
 
@@ -16,17 +16,16 @@
 
 - 如果使用poetry
 
-    > git clone https://github.com/bruceunx/llama-python-gui && poetry install
+  > git clone https://github.com/bruceunx/llama-python-gui && poetry install
 
-- 如果pip 
+- 如果pip
 
-    > pip install llama-cpp-python  pyside6 markdown  pygments 
+  > pip install llama-cpp-python pyside6 markdown pygments
 
 - 运行
 
-    > python llama_python_gui
-
+  > python llama_python_gui
 
 #### TODO
 
- - [ ] add RAG?
+- [ ] add RAG?
