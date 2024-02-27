@@ -52,6 +52,7 @@ class LlamaWorker(QObject):
     @Slot(str)
     def handle_chat(self, prompt: str) -> None:
         self.messages.append({"role": "user", "content": prompt})
+        self.chat_msg.emit("问题 -> &nbsp;" + prompt)
         output = self.llm.create_chat_completion(
             messages=self.messages[-7:],
             response_format={
@@ -61,7 +62,7 @@ class LlamaWorker(QObject):
             stream=True,
         )
         res = ""
-        self.chat_msg.emit("AI:")
+        self.chat_msg.emit("AI -> ")
         for reselt in output:
             content = reselt["choices"][0]["delta"]  # type: ignore
             if "content" in content:
@@ -96,7 +97,12 @@ class LlamaWorker(QObject):
     def reload_messages(self, chat_id: str) -> None:
         self.load_chat(chat_id)
         for message in self.messages[1:]:
-            self.chat_msg.emit(message["content"])
+            if message["role"] == "assistant":
+                self.chat_msg.emit("AI -> &nbsp;" +  # type: ignore
+                                   message["content"])  # type: ignore
+            else:
+                self.chat_msg.emit("问题 -> &nbsp;" +  # type: ignore
+                                   message["content"])  # type: ignore
 
     @Slot(str)
     def set_name(self, name: str):

@@ -257,6 +257,8 @@ class MainView(QWidget):
 
     @Slot(str)
     def reload_chat(self, chat_uid: str):
+        if self.current_chat_id == chat_uid:
+            return
         self.current_chat_id = chat_uid
         self.reset_chat_container()
         self.chat_uid.emit(chat_uid)
@@ -279,4 +281,3 @@ class MainView(QWidget):
         self.worker.chat_msg.connect(self.chat_content.widget().add_chat)
         self.worker.stream_msg.connect(
             self.chat_content.widget().update_message)
-        self.prompt_msg.connect(self.chat_content.widget().add_chat)
