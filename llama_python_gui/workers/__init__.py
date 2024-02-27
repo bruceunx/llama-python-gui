@@ -4,23 +4,22 @@ import pickle
 
 from PySide6.QtCore import QObject, Slot, Signal
 
-from llama_cpp import Llama, uuid
+from llama_cpp import Llama
 from llama_cpp.llama_types import ChatCompletionRequestMessage
 
 from llama_python_gui._config import MODEL_PATH, base_path
 from llama_python_gui._utils import check_gpu_availability
 
 
-class LlamaServer(QObject):
+class LlamaWorker(QObject):
 
+    chats = Signal(list)
     stream_msg = Signal(str)
 
-    def __init__(self,
-                 model: str = "normal",
-                 messages: List[ChatCompletionRequestMessage] = [],
-                 chat_id: str | None = None):
+    def __init__(self, model: str = "normal"):
         super().__init__()
-        self.messages = messages
+        self.messages: List[ChatCompletionRequestMessage] = []
+
         if model not in MODEL_PATH:
             raise ValueError(f"Model {model} not found")
 
@@ -38,7 +37,7 @@ class LlamaServer(QObject):
                          chat_format="chatml",
                          verbose=False)
         self.name: str | None = None
-        self.chat_id = chat_id or str(uuid.uuid4())
+        self.chat_id: str | None = None
 
     @Slot(str)
     def switch_model(self, model: str):
@@ -70,14 +69,26 @@ class LlamaServer(QObject):
         # save chat at any step
         self.save_chat()
 
-    @Slot()
+    @Slot(str, str)
+    def start_new_chat(self, prompt: str, chat_uid: str) -> None:
+        if len(self.messages) > 1:
+            self.save_chat()
+        self.messages = [{
+            "role": "system",
+            "content": "You are a helpful assistant"
+        }]
+        self.name = prompt
+        self.chat_id = chat_uid
+        self.save_chat()
+
+    @Slot(str)
     def handle_reset(self) -> None:
         if len(self.messages) == 1:
             return
         self.save_chat()
         self.messages.clear()
+        self.chat_id = None
         self.name = None
-        self.chat_id = str(uuid.uuid4())
 
     @Slot(str)
     def reload_messages(self, chat_id: str) -> None:
@@ -98,12 +109,15 @@ class LlamaServer(QObject):
                         break
             pickle.dump({"name": self.name, "messages": self.messages}, f)
 
+    @Slot()
     def get_all_chats(self):
         chats = []
         for chat in os.listdir(base_path / "data"):
+            # sort chat by timestamp from newer to older
             with open(base_path / "data" / chat, "rb") as f:
                 data = pickle.load(f)
                 chats.append({"uuid": chat, "name": data["name"]})
+        self.chats.emit(chats)
 
     def load_chat(self, chat_id: str):
         with open(base_path / "data" / chat_id, "rb") as f:
@@ -111,3 +125,7 @@ class LlamaServer(QObject):
             self.name = data["name"]
             self.messages = data["messages"]
         return self.name, self.messages
+
+    @Slot(str)
+    def delete_chat(self, chat_id: str):
+        os.remove(base_path / "data" / chat_id)

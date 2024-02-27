@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 from PySide6.QtCore import Signal, Slot
 from PySide6.QtGui import QPixmap, Qt
 from PySide6.QtWidgets import QDialog, QFrame, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget, QHBoxLayout
@@ -40,23 +42,19 @@ class ChangeTitle(QDialog):
 
 
 class ArchiveChats(QWidget):
+    chat_uid = Signal(str)
+    del_uid = Signal(str)
 
     def __init__(self):
         super().__init__()
         self.addComponents()
 
     def addComponents(self):
-
         self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(5, 2, 5, 2)
         self.layout().setSpacing(1)
 
         self.chats = []
-        for i in range(30):
-            q_label = SingleChat(f"chat {i}", str(i))
-            q_label.del_chat.connect(self.delete_chat)
-            self.chats.append(q_label)
-            self.layout().addWidget(q_label)
 
     @Slot(str)
     def delete_chat(self, chat_uid: str):
@@ -64,8 +62,30 @@ class ArchiveChats(QWidget):
             if chat.uid == chat_uid:
                 self.chats.remove(chat)
                 self.layout().removeWidget(chat)
+                self.del_uid.emit(chat_uid)
                 chat.deleteLater()
                 break
+
+    @Slot(list)
+    def load_chats(self, chats: List[Dict[str, str]]):
+        for chat in chats:
+            q_label = SingleChat(chat["name"], chat["uuid"])
+            q_label.del_chat.connect(self.delete_chat)
+            q_label.chat_uid.connect(self.send_chat_uid)
+            self.chats.append(q_label)
+            self.layout().addWidget(q_label)
+
+    @Slot(str)
+    def send_chat_uid(self, chat_uid):
+        self.chat_uid.emit(chat_uid)
+
+    @Slot(str, str)
+    def add_new_chat(self, prompt: str, chat_uid: str) -> None:
+        q_label = SingleChat(prompt, chat_uid)
+        self.chats.append(q_label)
+        print(q_label)
+        self.layout().insertWidget(0, q_label)  # type: ignore
+        # self.layout().addWidget(q_label)  # type: ignore
 
 
 class ClickLable(QLabel):
@@ -84,6 +104,8 @@ class SingleChat(QWidget):
 
     clicked = Signal()
     del_chat = Signal(str)
+
+    chat_uid = Signal(str)
 
     def __init__(self, content: str, uid: str):
         super().__init__()
@@ -111,6 +133,9 @@ class SingleChat(QWidget):
         self.delete_btn = QPushButton()
         self.delete_btn.setIcon(QPixmap(":/icons/trash-2.svg"))
         self.layout().addWidget(self.delete_btn)
+
+        self.content_label.clicked.connect(
+            lambda: self.chat_uid.emit(self.uid))
 
     def addStyle(self):
         self.setStyleSheet("")

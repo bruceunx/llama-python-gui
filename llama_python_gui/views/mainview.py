@@ -1,10 +1,13 @@
-from PySide6.QtCore import QMetaObject, QSize, Slot
+import uuid
+
+from PySide6.QtCore import QMetaObject, QSize, QThread, Signal, Slot
 from PySide6.QtGui import QPixmap, Qt
 from PySide6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QPushButton, QScrollArea, QTextEdit, QWidget, QVBoxLayout, QLabel
 
 from llama_python_gui.views.components import ArchiveChats
 
-from llama_python_gui.views.components.contentview import ChatContainer, Introduction  # noqa
+from llama_python_gui.views.components.contentview import ChatContainer, Introduction
+from llama_python_gui.workers import LlamaWorker  # noqa
 
 MainStyle = """
 *{
@@ -53,6 +56,13 @@ MainStyle = """
 
 class MainView(QWidget):
 
+    chat_uid = Signal(str)
+    del_uid = Signal(str)
+
+    chat_info = Signal(str, str)
+    start_singnal = Signal()
+    init_signal = Signal()
+
     def __init__(self):
         super().__init__()
         self.resize(1200, 700)
@@ -62,7 +72,11 @@ class MainView(QWidget):
         self.addComponents()
         self.addStyle()
         self.addWorkers()
+        self.addConnections()
         self.afterInit()
+
+        self.current_chat_id = ""
+        self.start_chat = True
 
     def addComponents(self):
         self.setLayout(QVBoxLayout())
@@ -185,14 +199,28 @@ class MainView(QWidget):
         self.setStyleSheet(MainStyle)
 
     def addWorkers(self):
-        pass
+        self.worker = LlamaWorker()
+        self.thread_worker = QThread()
+        self.worker.moveToThread(self.thread_worker)
+
+    def addConnections(self):
+        self.achive_chats.chat_uid.connect(self.reload_chat)
+        self.achive_chats.del_uid.connect(self.delete_chat)
+        self.worker.chats.connect(self.achive_chats.load_chats)
+        self.del_uid.connect(self.worker.delete_chat)
+        self.chat_info.connect(self.achive_chats.add_new_chat)
+        self.chat_info.connect(self.worker.start_new_chat)
+        self.start_singnal.connect(self.worker.handle_reset)
+        self.init_signal.connect(self.worker.get_all_chats)
 
     def afterInit(self):
-        pass
+        self.thread_worker.start()
+        self.init_signal.emit()
 
     @Slot()
     def on_new_chat_clicked(self):
-        self.chat_content.setWidget(ChatContainer())
+        self.chat_content.setWidget(Introduction())
+        self.start_chat = True
 
     @Slot(int, int)
     def scroll_down(self, min: int, max: int):
@@ -200,8 +228,37 @@ class MainView(QWidget):
 
     @Slot()
     def on_send_chat_clicked(self):
+        if self.start_chat:
+            self.chat_content.setWidget(ChatContainer())
         prompt = self.prompt_input.toPlainText().strip()
         if prompt == "":
             return
+
+        if self.start_chat:
+            chat_uid = str(uuid.uuid4())
+            self.current_chat_id = chat_uid
+            self.chat_info.emit(prompt, chat_uid)
+
+        self.start_chat = False
         self.chat_content.widget().add_chat(prompt)
         self.prompt_input.clear()
+
+    @Slot(str)
+    def reload_chat(self, chat_uid: str):
+        self.current_chat_id = chat_uid
+        self.chat_uid.disconnect()
+        self.chat_content.setWidget(ChatContainer())
+        self.chat_uid.connect(self.chat_content.widget().reload_chat)
+        self.chat_uid.emit(chat_uid)
+        self.start_chat = False
+
+    @Slot(str)
+    def delete_chat(self, chat_uid: str):
+        if chat_uid == self.current_chat_id:
+            self.chat_content.setWidget(Introduction())
+        self.del_uid.emit(chat_uid)
+
+    def closeEvent(self, event):
+        self.thread_worker.quit()
+        self.thread_worker.wait()
+        event.accept()

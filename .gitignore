@@ -3,4 +3,5 @@
 
 .mypy_cache/
 /**/.DS_Store
+/llama_python_gui/data/
 

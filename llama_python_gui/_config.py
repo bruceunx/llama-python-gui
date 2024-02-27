@@ -93,6 +93,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 """
 
 MODEL_PATH = {
-    "normal": "../models/openhermes-2.5-mistral-7b.Q5_K_M.gguf",
-    "small": "../models/openhermes-2.5-mistral-7b.Q5_K_M.gguf"
+    "normal": "../llm/models/openhermes-2.5-mistral-7b.Q5_K_M.gguf",
+    "small": "../llm/models/openhermes-2.5-mistral-7b.Q5_K_M.gguf"
 }
