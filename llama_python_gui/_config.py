@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 base_path = Path(__file__).resolve().parent
 
@@ -92,7 +93,5 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </style>
 """
 
-MODEL_PATH = {
-    "normal": "../llm/models/openhermes-2.5-mistral-7b.Q5_K_M.gguf",
-    "small": "../llm/models/openhermes-2.5-mistral-7b.Q5_K_M.gguf"
-}
+with open(base_path / "config.json", "r") as f:
+    MODEL_PATH = json.load(f)

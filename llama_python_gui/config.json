@@ -1,0 +1,4 @@
+{
+    "normal": "../llm/models/openhermes-2.5-mistral-7b.Q5_K_M.gguf",
+    "small": "../llm/models/tinyllama-1.1b-chat-v0.3.Q5_K_M.gguf",
+}
