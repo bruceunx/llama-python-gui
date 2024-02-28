@@ -10,21 +10,6 @@ INTRODUCTION = """
 1. 本软件是一个基于Qt的聊天软件
 2. 本软件支持用户离线AI聊天功能
 3. 本软件支持小内存笔记本使用
-```python
-import os
-os.system("echo hello")
-def hello():
-    return "world"
-```
-
-```ts
-let a = "hello world"
-console.log(a)
-```
-| Item         | Price     | # In stock |
-|--------------|-----------|------------|
-| Juicy Apples | 1.99      | *7*        |
-| Bananas      | **1.89**  | 5234       |
 """
 
 # background-color: #272822;
