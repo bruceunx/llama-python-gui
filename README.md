@@ -30,3 +30,4 @@
 #### TODO
 
 - [ ] add RAG?
+- [ ] add Image
