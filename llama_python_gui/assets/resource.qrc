@@ -6,5 +6,6 @@
     <file>layers.svg</file>
     <file>trash-2.svg</file>
     <file>edit.svg</file>
+    <file>pause-circle.svg</file>
   </qresource>
 </RCC>

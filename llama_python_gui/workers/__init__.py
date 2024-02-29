@@ -38,7 +38,7 @@ class LlamaWorker(QThread):
                          n_gpu_layers=self.n_gpu_layers,
                          chat_format="chatml",
                          verbose=False,
-                         n_ctx=2048)
+                         n_ctx=4096)
         self.name: str | None = None
         self.chat_id: str | None = None
 
@@ -53,7 +53,7 @@ class LlamaWorker(QThread):
                 self.messages.append({"role": "user", "content": self.prompt})
                 self.chat_msg.emit("问题 -> &nbsp;" + self.prompt)
                 output = self.llm.create_chat_completion(
-                    messages=self.messages[-1:],
+                    messages=self.messages[-3:],
                     response_format={
                         "type": "json_object",
                     },

@@ -181,11 +181,12 @@ class MainView(QWidget):
         self.chat_button.setObjectName("send_chat")
         prompt_frame.layout().addWidget(self.chat_button)
 
-        self.stop_btn = QPushButton("停止")
+        self.stop_btn = QPushButton()
         self.stop_btn.setObjectName("stop_btn")
         prompt_frame.layout().addWidget(self.stop_btn)
-        self.stop_btn.setFixedSize(42, 42)
         self.stop_btn.setVisible(False)
+        self.stop_btn.setIcon(QPixmap(":/icons/pause-circle.svg"))
+        self.stop_btn.setIconSize(QSize(30, 30))
 
         right_frame.layout().addWidget(self.chat_content)
         right_frame.layout().addWidget(prompt_frame, 0,
