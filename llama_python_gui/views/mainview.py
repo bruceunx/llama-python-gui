@@ -1,6 +1,6 @@
 import uuid
 
-from PySide6.QtCore import QMetaObject, QSize, QThread, Signal, Slot
+from PySide6.QtCore import QMetaObject, QSize, Signal, Slot
 from PySide6.QtGui import QPixmap, Qt
 from PySide6.QtWidgets import QComboBox, QFrame, QHBoxLayout, QPushButton, QScrollArea, QWidget, QVBoxLayout, QLabel
 
@@ -181,11 +181,12 @@ class MainView(QWidget):
         self.chat_button.setObjectName("send_chat")
         prompt_frame.layout().addWidget(self.chat_button)
 
-        self.stop_btn = QPushButton("停止")
+        self.stop_btn = QPushButton()
         self.stop_btn.setObjectName("stop_btn")
         prompt_frame.layout().addWidget(self.stop_btn)
-        self.stop_btn.setFixedSize(42, 42)
         self.stop_btn.setVisible(False)
+        self.stop_btn.setIcon(QPixmap(":/icons/pause-circle.svg"))
+        self.stop_btn.setIconSize(QSize(30, 30))
 
         right_frame.layout().addWidget(self.chat_content)
         right_frame.layout().addWidget(prompt_frame, 0,
@@ -218,8 +219,6 @@ class MainView(QWidget):
 
     def addWorkers(self):
         self.worker = LlamaWorker()
-        self.thread_worker = QThread()
-        self.worker.moveToThread(self.thread_worker)
 
     def addConnections(self):
         self.achive_chats.chat_uid.connect(self.reload_chat)
@@ -236,7 +235,7 @@ class MainView(QWidget):
         self.chat_uid.connect(self.worker.reload_messages)
 
     def afterInit(self):
-        self.thread_worker.start()
+        self.worker.start()
         self.init_signal.emit()
 
     @Slot()
@@ -261,6 +260,7 @@ class MainView(QWidget):
             self.chat_info.emit(prompt, chat_uid)
             self.start_chat = False
 
+        self.stop_btn.setVisible(True)
         self.prompt_msg.emit(prompt)
         self.prompt_input.reset()
 
@@ -280,8 +280,8 @@ class MainView(QWidget):
         self.del_uid.emit(chat_uid)
 
     def closeEvent(self, event):
-        self.thread_worker.quit()
-        self.thread_worker.wait()
+        self.worker.quit()
+        self.worker.wait()
         event.accept()
 
     def reset_chat_container(self) -> None:
@@ -292,4 +292,5 @@ class MainView(QWidget):
 
     @Slot()
     def on_stop_btn_clicked(self):
+        self.stop_btn.setVisible(False)
         self.stop_signal.emit()
