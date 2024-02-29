@@ -1,6 +1,7 @@
 ## 🦙LLama 离线chat版本
 
-![](./screenshot.png)
+![](./screenshot1.png)
+![](./screenshot2.png)
 
 - 使用LLama2 模型的离线chat版本
 

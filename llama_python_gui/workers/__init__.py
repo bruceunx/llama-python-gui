@@ -17,6 +17,7 @@ class LlamaWorker(QThread):
     chats = Signal(list)
     stream_msg = Signal(str)
     chat_msg = Signal(str)
+    prompt_end = Signal()
 
     def __init__(self, model: str = "normal"):
         super().__init__()
@@ -71,6 +72,7 @@ class LlamaWorker(QThread):
                             content["content"])  # type: ignore
                         res += content["content"]  # type: ignore
                 self.messages.append({"role": "assistant", "content": res})
+                self.prompt_end.emit()
                 # save chat at any step
                 self.save_chat()
 
