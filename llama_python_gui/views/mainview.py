@@ -231,6 +231,7 @@ class MainView(QWidget):
         self.init_signal.connect(self.worker.get_all_chats)
         self.prompt_msg.connect(self.worker.handle_chat)
         self.stop_signal.connect(self.worker.stop_handle)
+        self.worker.prompt_end.connect(lambda: self.stop_btn.setVisible(False))
 
         self.chat_uid.connect(self.worker.reload_messages)
 
