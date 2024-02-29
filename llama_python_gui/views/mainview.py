@@ -224,6 +224,8 @@ class MainView(QWidget):
         self.init_signal.connect(self.worker.get_all_chats)
         self.prompt_msg.connect(self.worker.handle_chat)
 
+        self.chat_uid.connect(self.worker.reload_messages)
+
     def afterInit(self):
         self.thread_worker.start()
         self.init_signal.emit()
@@ -239,14 +241,12 @@ class MainView(QWidget):
 
     @Slot()
     def on_send_chat_clicked(self):
-        if self.start_chat:
-            self.reset_chat_container()
-
         prompt = self.prompt_input.toPlainText().strip()
         if prompt == "":
             return
 
         if self.start_chat:
+            self.reset_chat_container()
             chat_uid = str(uuid.uuid4())
             self.current_chat_id = chat_uid
             self.chat_info.emit(prompt, chat_uid)
@@ -277,7 +277,6 @@ class MainView(QWidget):
 
     def reset_chat_container(self) -> None:
         self.chat_content.setWidget(ChatContainer())
-        self.chat_uid.connect(self.worker.reload_messages)
         self.worker.chat_msg.connect(self.chat_content.widget().add_chat)
         self.worker.stream_msg.connect(
             self.chat_content.widget().update_message)

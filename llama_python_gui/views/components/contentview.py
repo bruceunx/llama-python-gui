@@ -22,6 +22,7 @@ QTextEdit {
     font-size: 18pt;
     border: none;
     background-color: #272822;
+    border-radius: 10px;
 }
 """
 
@@ -48,7 +49,7 @@ class Introduction(QWidget):
             INTRODUCTION, extensions=["fenced_code", "codehilite", "tables"])
         introduction.setHtml(html)
         introduction.setReadOnly(True)
-        introduction.setFixedSize(500, 200)
+        introduction.setFixedSize(400, 170)
 
         self.setStyleSheet(Style)
 

@@ -95,6 +95,7 @@ class LlamaWorker(QObject):
 
     @Slot(str)
     def reload_messages(self, chat_id: str) -> None:
+        # self.messages.clear()
         self.load_chat(chat_id)
         for message in self.messages[1:]:
             if message["role"] == "assistant":
