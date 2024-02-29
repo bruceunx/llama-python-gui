@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Generator
 import os
 import pickle
 
@@ -36,9 +36,14 @@ class LlamaWorker(QObject):
         self.llm = Llama(model_path=MODEL_PATH[model],
                          n_gpu_layers=self.n_gpu_layers,
                          chat_format="chatml",
-                         verbose=False)
+                         verbose=False,
+                         n_ctx=2048)
         self.name: str | None = None
         self.chat_id: str | None = None
+
+        self.stop_chat = False
+
+        self.current_generator: Generator[str, int, None] | None = None
 
     @Slot(str)
     def switch_model(self, model: str):
@@ -54,15 +59,15 @@ class LlamaWorker(QObject):
         self.messages.append({"role": "user", "content": prompt})
         self.chat_msg.emit("问题 -> &nbsp;" + prompt)
         output = self.llm.create_chat_completion(
-            messages=self.messages[-7:],
+            messages=self.messages[-1:],
             response_format={
                 "type": "json_object",
             },
             temperature=0.7,
             stream=True,
         )
-        res = ""
         self.chat_msg.emit("AI -> ")
+        res = ""
         for reselt in output:
             content = reselt["choices"][0]["delta"]  # type: ignore
             if "content" in content:
@@ -71,6 +76,18 @@ class LlamaWorker(QObject):
         self.messages.append({"role": "assistant", "content": res})
         # save chat at any step
         self.save_chat()
+
+    # def create_generator(self,
+    #                      output: Iterator[CreateChatCompletionStreamResponse]):
+    #     res = ""
+    #     for reselt in output:
+    #         content = reselt["choices"][0]["delta"]  # type: ignore
+    #         if "content" in content:
+    #             self.stream_msg.emit(content["content"])  # type: ignore
+    #             res += content["content"]  # type: ignore
+    #     self.messages.append({"role": "assistant", "content": res})
+    #     # save chat at any step
+    #     self.save_chat()
 
     @Slot(str, str)
     def start_new_chat(self, prompt: str, chat_uid: str) -> None:
@@ -138,3 +155,7 @@ class LlamaWorker(QObject):
     @Slot(str)
     def delete_chat(self, chat_id: str):
         os.remove(base_path / "data" / chat_id)
+
+    @Slot()
+    def stop_handle(self):
+        self.stop_chat = True

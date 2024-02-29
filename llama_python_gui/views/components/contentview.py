@@ -96,6 +96,10 @@ class PromptTextEdit(QTextEdit):
         height = min(self.max_height, self.height() + max)
         self.setFixedHeight(height)
 
+    def reset(self):
+        self.setFixedHeight(50)
+        self.setPlainText("")
+
 
 class ChatContainer(QWidget):
 

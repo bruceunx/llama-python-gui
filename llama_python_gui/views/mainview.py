@@ -60,8 +60,9 @@ class MainView(QWidget):
     del_uid = Signal(str)
 
     chat_info = Signal(str, str)
-    start_singnal = Signal()
+    start_signal = Signal()
     init_signal = Signal()
+    stop_signal = Signal()
 
     prompt_msg = Signal(str)
 
@@ -179,6 +180,11 @@ class MainView(QWidget):
         self.chat_button.setIconSize(QSize(30, 30))
         self.chat_button.setObjectName("send_chat")
         prompt_frame.layout().addWidget(self.chat_button)
+
+        self.stop_btn = QPushButton("停止")
+        self.stop_btn.setObjectName("stop_btn")
+        prompt_frame.layout().addWidget(self.stop_btn)
+
         right_frame.layout().addWidget(self.chat_content)
         right_frame.layout().addWidget(prompt_frame, 0,
                                        Qt.AlignmentFlag.AlignBottom)
@@ -220,9 +226,10 @@ class MainView(QWidget):
         self.del_uid.connect(self.worker.delete_chat)
         self.chat_info.connect(self.achive_chats.add_new_chat)
         self.chat_info.connect(self.worker.start_new_chat)
-        self.start_singnal.connect(self.worker.handle_reset)
+        self.start_signal.connect(self.worker.handle_reset)
         self.init_signal.connect(self.worker.get_all_chats)
         self.prompt_msg.connect(self.worker.handle_chat)
+        self.stop_signal.connect(self.worker.stop_handle)
 
         self.chat_uid.connect(self.worker.reload_messages)
 
@@ -253,7 +260,7 @@ class MainView(QWidget):
             self.start_chat = False
 
         self.prompt_msg.emit(prompt)
-        self.prompt_input.clear()
+        self.prompt_input.reset()
 
     @Slot(str)
     def reload_chat(self, chat_uid: str):
@@ -280,3 +287,7 @@ class MainView(QWidget):
         self.worker.chat_msg.connect(self.chat_content.widget().add_chat)
         self.worker.stream_msg.connect(
             self.chat_content.widget().update_message)
+
+    @Slot()
+    def on_stop_btn_clicked(self):
+        self.stop_signal.emit()
