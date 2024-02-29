@@ -184,6 +184,8 @@ class MainView(QWidget):
         self.stop_btn = QPushButton("停止")
         self.stop_btn.setObjectName("stop_btn")
         prompt_frame.layout().addWidget(self.stop_btn)
+        self.stop_btn.setFixedSize(42, 42)
+        self.stop_btn.setVisible(False)
 
         right_frame.layout().addWidget(self.chat_content)
         right_frame.layout().addWidget(prompt_frame, 0,
