@@ -1,8 +1,9 @@
-from typing import List, Generator
+from typing import List
 import os
 import pickle
+import time
 
-from PySide6.QtCore import QObject, Slot, Signal
+from PySide6.QtCore import QThread, Slot, Signal
 
 from llama_cpp import Llama
 from llama_cpp.llama_types import ChatCompletionRequestMessage
@@ -11,7 +12,7 @@ from llama_python_gui._config import MODEL_PATH, base_path
 from llama_python_gui._utils import check_gpu_availability
 
 
-class LlamaWorker(QObject):
+class LlamaWorker(QThread):
 
     chats = Signal(list)
     stream_msg = Signal(str)
@@ -43,7 +44,39 @@ class LlamaWorker(QObject):
 
         self.stop_chat = False
 
-        self.current_generator: Generator[str, int, None] | None = None
+        self.stop = False
+        self.prompt: str | None = None
+
+    def run(self) -> None:
+        while not self.stop:
+            if self.prompt is not None:
+                self.messages.append({"role": "user", "content": self.prompt})
+                self.chat_msg.emit("问题 -> &nbsp;" + self.prompt)
+                output = self.llm.create_chat_completion(
+                    messages=self.messages[-1:],
+                    response_format={
+                        "type": "json_object",
+                    },
+                    temperature=0.7,
+                    stream=True,
+                )
+                self.chat_msg.emit("AI -> ")
+                res = ""
+                for reselt in output:
+                    if self.stop_chat:
+                        break
+                    content = reselt["choices"][0]["delta"]  # type: ignore
+                    if "content" in content:
+                        self.stream_msg.emit(
+                            content["content"])  # type: ignore
+                        res += content["content"]  # type: ignore
+                self.messages.append({"role": "assistant", "content": res})
+                # save chat at any step
+                self.save_chat()
+
+                self.prompt = None
+            self.stop_chat = False
+            time.sleep(0.5)
 
     @Slot(str)
     def switch_model(self, model: str):
@@ -56,38 +89,7 @@ class LlamaWorker(QObject):
 
     @Slot(str)
     def handle_chat(self, prompt: str) -> None:
-        self.messages.append({"role": "user", "content": prompt})
-        self.chat_msg.emit("问题 -> &nbsp;" + prompt)
-        output = self.llm.create_chat_completion(
-            messages=self.messages[-1:],
-            response_format={
-                "type": "json_object",
-            },
-            temperature=0.7,
-            stream=True,
-        )
-        self.chat_msg.emit("AI -> ")
-        res = ""
-        for reselt in output:
-            content = reselt["choices"][0]["delta"]  # type: ignore
-            if "content" in content:
-                self.stream_msg.emit(content["content"])  # type: ignore
-                res += content["content"]  # type: ignore
-        self.messages.append({"role": "assistant", "content": res})
-        # save chat at any step
-        self.save_chat()
-
-    # def create_generator(self,
-    #                      output: Iterator[CreateChatCompletionStreamResponse]):
-    #     res = ""
-    #     for reselt in output:
-    #         content = reselt["choices"][0]["delta"]  # type: ignore
-    #         if "content" in content:
-    #             self.stream_msg.emit(content["content"])  # type: ignore
-    #             res += content["content"]  # type: ignore
-    #     self.messages.append({"role": "assistant", "content": res})
-    #     # save chat at any step
-    #     self.save_chat()
+        self.prompt = prompt
 
     @Slot(str, str)
     def start_new_chat(self, prompt: str, chat_uid: str) -> None:
@@ -159,3 +161,7 @@ class LlamaWorker(QObject):
     @Slot()
     def stop_handle(self):
         self.stop_chat = True
+
+    def quit(self):
+        self.stop = True
+        super().quit()
