@@ -5,11 +5,14 @@ import time
 
 from PySide6.QtCore import QThread, Slot, Signal
 
+from jinja2.sandbox import ImmutableSandboxedEnvironment
 from llama_cpp import Llama
 from llama_cpp.llama_types import ChatCompletionRequestMessage
 
 from llama_python_gui._config import MODEL_PATH, base_path
 from llama_python_gui._utils import check_gpu_availability
+
+DEFAULT_TEMP = "{% for message in messages %}{{'<|im_start|>' + message['role'] + '\n' + message['content'] + '<|im_end|>' + '\n'}}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\n' }}{% endif %}"
 
 
 class LlamaWorker(QThread):
@@ -37,9 +40,8 @@ class LlamaWorker(QThread):
 
         self.llm = Llama(model_path=MODEL_PATH[model],
                          n_gpu_layers=self.n_gpu_layers,
-                         chat_format="chatml",
                          verbose=False,
-                         n_ctx=4096)
+                         n_ctx=2048)
         self.name: str | None = None
         self.chat_id: str | None = None
 
@@ -48,29 +50,36 @@ class LlamaWorker(QThread):
         self.stop = False
         self.prompt: str | None = None
 
+        if "tokenizer.chat_template" not in self.llm.metadata:
+            chat_temp = DEFAULT_TEMP
+        else:
+            chat_temp = self.llm.metadata["tokenizer.chat_template"].strip()
+
+        _env = ImmutableSandboxedEnvironment(trim_blocks=True,
+                                             lstrip_blocks=True)
+        self.temp_eng = _env.from_string(chat_temp)
+
     def run(self) -> None:
         while not self.stop:
             if self.prompt is not None:
                 self.messages.append({"role": "user", "content": self.prompt})
                 self.chat_msg.emit("问题 -> &nbsp;" + self.prompt)
-                output = self.llm.create_chat_completion(
-                    messages=self.messages[-3:],
-                    response_format={
-                        "type": "json_object",
-                    },
+                prompts = self.temp_eng.render(messages=self.messages[-3:],
+                                               add_generation_prompt=True)
+                output = self.llm.create_completion(
+                    prompt=prompts,
                     temperature=0.7,
                     stream=True,
+                    max_tokens=1024,
                 )
                 self.chat_msg.emit("AI -> ")
                 res = ""
-                for reselt in output:
+                for result in output:
                     if self.stop_chat:
                         break
-                    content = reselt["choices"][0]["delta"]  # type: ignore
-                    if "content" in content:
-                        self.stream_msg.emit(
-                            content["content"])  # type: ignore
-                        res += content["content"]  # type: ignore
+                    content = result["choices"][0]['text']  # type: ignore
+                    self.stream_msg.emit(content)  # type: ignore
+                    res += content
                 self.messages.append({"role": "assistant", "content": res})
                 self.prompt_end.emit()
                 # save chat at any step
@@ -86,8 +95,15 @@ class LlamaWorker(QThread):
             raise ValueError(f"Model {model} not found")
         self.llm = Llama(model_path=MODEL_PATH[model],
                          n_gpu_layers=self.n_gpu_layers,
-                         chat_format="chatml",
                          verbose=False)
+
+        if "tokenizer.chat_template" not in self.llm.metadata:
+            chat_temp = DEFAULT_TEMP
+        else:
+            chat_temp = self.llm.metadata["tokenizer.chat_template"].strip()
+        _env = ImmutableSandboxedEnvironment(trim_blocks=True,
+                                             lstrip_blocks=True)
+        self.temp_eng = _env.from_string(chat_temp)
 
     @Slot(str)
     def handle_chat(self, prompt: str) -> None:
