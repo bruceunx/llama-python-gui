@@ -1,5 +1,6 @@
 /**/__pycache__
 /**/.py[ocd]
+/**/.null-ls*
 
 .mypy_cache/
 /**/.DS_Store

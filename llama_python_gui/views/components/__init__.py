@@ -124,9 +124,9 @@ class SingleChat(QWidget):
     def addComponents(self):
         self.setLayout(QHBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
+        self.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
 
         self.content_label = ClickLable(self.content)
-        self.content_label.setFixedWidth(100)
         self.layout().addWidget(self.content_label)
 
         self.edit_btn = QPushButton()
@@ -149,8 +149,18 @@ class SingleChat(QWidget):
     def afterInit(self):
         self.edit_btn.clicked.connect(self.on_edit)
         self.delete_btn.clicked.connect(lambda: self.del_chat.emit(self.uid))
+        self.edit_btn.setVisible(False)
+        self.delete_btn.setVisible(False)
 
     def on_edit(self):
         change_title = ChangeTitle(self.content)
         if change_title.exec() == QDialog.Accepted:
             self.content_label.setText(change_title.title_input.text())
+
+    def enterEvent(self, event):
+        self.edit_btn.setVisible(True)
+        self.delete_btn.setVisible(True)
+
+    def leaveEvent(self, event):
+        self.edit_btn.setVisible(False)
+        self.delete_btn.setVisible(False)

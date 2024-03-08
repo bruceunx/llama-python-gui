@@ -49,7 +49,7 @@ class Introduction(QWidget):
             INTRODUCTION, extensions=["fenced_code", "codehilite", "tables"])
         introduction.setHtml(html)
         introduction.setReadOnly(True)
-        introduction.setFixedSize(400, 170)
+        introduction.setFixedSize(400, 100)
 
         self.setStyleSheet(Style)
 
