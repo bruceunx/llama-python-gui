@@ -1,5 +1,6 @@
 ## 🦙LLama 离线chat版本
 
+![](./screenshot3.png)
 ![](./screenshot1.png)
 ![](./screenshot2.png)
 
